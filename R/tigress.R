@@ -34,16 +34,14 @@
 #'   \code{TRUE}).
 #' @param verb A boolean indicating verbose mode. If \code{TRUE}, print messages
 #'   about what we are doing, otherwise remain silent (default \code{FALSE}).
-#' @param usemulticore A boolean indicating whether multicore parallel computing
-#'   is used. This requires the package \code{parallel} (default \code{FALSE}).
-#'
+#' @param usemulticore A integer specifying number of cores to be used. This requires the package      \code{parallel} (default \code{1}).
 #' @return A list of matrices (or a single matrix if \code{allsteps=FALSE}) with
 #'   the scores of each TF x target candidate interaction. Each row corresponds
 #'   to a TF, each column to a target.
 #'
 #' @export
 tigress <-
-  function(expdata, tflist=colnames(expdata), targetlist=colnames(expdata), alpha=0.2, nstepsLARS=5, nsplit=100, normalizeexp=TRUE, scoring="area", allsteps=TRUE, verb=FALSE, usemulticore=FALSE)
+  function(expdata, tflist=colnames(expdata), targetlist=colnames(expdata), alpha=0.2, nstepsLARS=5, nsplit=100, normalizeexp=TRUE, scoring="area", allsteps=TRUE, verb=FALSE, usemulticore=1L)
   {
     # Check if we can run multicore
     if (usemulticore) {
@@ -108,8 +106,8 @@ tigress <-
     }
 
     # Treat target genes one by one
-    if (usemulticore) {
-      score <- mclapply(seq(ntargets),stabselonegene,mc.cores=detectCores()-1)
+    if (usemulticore > 1L) {
+      score <- mclapply(seq(ntargets),stabselonegene,mc.cores=usemulticore)
     } else {
       score <- lapply(seq(ntargets),stabselonegene)
     }
