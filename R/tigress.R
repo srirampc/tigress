@@ -44,7 +44,7 @@ tigress <-
   function(expdata, tflist=colnames(expdata), targetlist=colnames(expdata), alpha=0.2, nstepsLARS=5, nsplit=100, normalizeexp=TRUE, scoring="area", allsteps=TRUE, verb=FALSE, usemulticore=1L)
   {
     # Check if we can run multicore
-    if (usemulticore) {
+    if (usemulticore > 1L) {
       require(parallel)
     }
 
