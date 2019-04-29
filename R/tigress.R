@@ -41,7 +41,9 @@
 #'
 #' @export
 tigress <-
-  function(expdata, tflist=colnames(expdata), targetlist=colnames(expdata), alpha=0.2, nstepsLARS=5, nsplit=100, normalizeexp=TRUE, scoring="area", allsteps=TRUE, verb=FALSE, usemulticore=1L)
+  function(expdata, tflist=colnames(expdata), targetlist=colnames(expdata),
+           alpha=0.2, nstepsLARS=5, nsplit=100, normalizeexp=TRUE, scoring="area",
+           allsteps=TRUE, verb=FALSE, usemulticore=1L, recursive=FALSE)
   {
     # Check if we can run multicore
     if (usemulticore > 1L) {
@@ -107,7 +109,9 @@ tigress <-
 
     # Treat target genes one by one
     if (usemulticore > 1L) {
-      score <- mclapply(seq(ntargets),stabselonegene,mc.cores=usemulticore)
+      score <- mclapply(seq(ntargets),stabselonegene,
+                        mc.cores = usemulticore,
+                        mc.cleanup = TRUE, mc.allow.recursive = recursive)
     } else {
       score <- lapply(seq(ntargets),stabselonegene)
     }
